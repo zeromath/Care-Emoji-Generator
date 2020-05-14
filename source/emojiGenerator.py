@@ -4,16 +4,36 @@ import os
 from bookCover import BookHandler
 
 class EmojiGenerator:
+    """ 
+    This is a class for generating the care emoji. 
+      
+    Attributes: 
+
+    Methods:
+        generateCareEmoji: Generate the emoji with user designated image inside as a Image object.
+    """
     def __init__(self):
+        # Load emoji file into an Image object
         self.__path = os.path.dirname(os.path.abspath(__file__))
         self.__img_emoji = Image.open(self.__path + "/images/emoji.png")
         self.__img_emoji = self.__img_emoji.convert("RGBA")
         self.__emoji_w, self.__emoji_h = self.__img_emoji.size
 
+        # Load arm file into an Image object
         self.__img_arm = Image.open(self.__path + "/images/arm.png")
         self.__img_arm = self.__img_arm.convert("RGBA")
     
     def rotatingMask(self, img, rotation_angle = -20):
+        """ 
+        The function gets the rotation mask for the image rotation
+
+        Parameters: 
+            img (Image):            The Image object to rotate
+            rotation_angle (float): rotation angle
+
+        Returns: 
+            Image:                  An Image object of the mask
+        """
         img_mask = img.split()[3]
         img_mask = img_mask.rotate(rotation_angle, expand=1)
         return img_mask
@@ -26,6 +46,22 @@ class EmojiGenerator:
                                 use_rel_pos = True,
                                 rel_position = (0.2, 0.25),
                                 abs_position = (0, 0)):
+        """ 
+        The function generates the emoji
+
+        Parameters: 
+            img_item (Image):               The Image object of the item
+            rotation_angle (float):         The angle that img_item rotates
+            keep_ration (bool):             True to keep the ration of size the item image
+            img_width (int):                User designated width for img_item. Will be ignored if keep_ration = True
+            img_height (int):               User designated height for img_item
+            use_rel_pos (bool):             True to use relative position parameters
+            rel_position ((float, float)):  The relative position in the emoji. Will be ignored if use_rel_pos = False
+            abs_position ((int, int)):      The absolute position in the emoji. Will be ignored if use_rel_pos = True
+
+        Returns: 
+            Image:                          An Image object of the cover
+        """
         img_emoji = self.__img_emoji.copy()
     
         img_item = img_item.convert("RGBA")
