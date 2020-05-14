@@ -10,7 +10,7 @@ except:
 
 
 if __name__ == '__main__':
-    file_path = 'example/'
+    file_path = os.path.dirname(os.path.abspath(__file__)) + '/'
     file_name = 'output'
     file_ext = '.png'
     
