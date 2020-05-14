@@ -6,39 +6,52 @@ class EmojiGenerator:
     def __init__(self):
         self.__img_emoji = Image.open("./images/emoji.png")
         self.__img_emoji = self.__img_emoji.convert("RGBA")
+        self.__emoji_w, self.__emoji_h = self.__img_emoji.size
 
         self.__img_arm = Image.open("./images/arm.png")
         self.__img_arm = self.__img_arm.convert("RGBA")
     
-    def generateCareEmoji(self, img_book, 
+    def rotatingMask(self, img, rotation_angle = -20):
+        img_mask = img.split()[3]
+        img_mask = img_mask.rotate(rotation_angle, expand=1)
+        return img_mask
+
+    def generateCareEmoji(self, img_item, 
                                 rotation_angle = -20, 
                                 keep_ratio = True, 
                                 img_width = 1000, 
-                                img_height = 1000):
+                                img_height = 1000,
+                                use_rel_pos = True,
+                                rel_position = (0.2, 0.25),
+                                abs_position = (0, 0)):
         img_emoji = self.__img_emoji.copy()
     
-        img_book = img_book.convert("RGBA")
+        img_item = img_item.convert("RGBA")
 
-        emoji_w, emoji_h = img_emoji.size
-
+        # compute the resize parameters
         if keep_ratio:
-            book_w, book_h = img_book.size
+            book_w, book_h = img_item.size
             new_w = 1000 * book_w // book_h
             new_h = 1000
         else:
             new_w, new_h = img_width, img_height
 
-        img_book = img_book.resize((new_w, new_h), Image.ANTIALIAS)
 
-        img_book = img_book.rotate(rotation_angle, expand = 1)
+        img_item = img_item.resize((new_w, new_h), Image.ANTIALIAS)
+        img_mask = self.rotatingMask(img_item)
+        img_item = img_item.rotate(rotation_angle, expand = 1)
 
+        # compute positions
+        if use_rel_pos:
+            r_w, r_h = rel_position
+            position = (int(self.__emoji_w * r_w), int(self.__emoji_h * r_h))
+        else:
+            position = abs_position
 
-        fff = Image.new('RGBA', (new_w, new_h), (255,)*4)
-        fff = fff.rotate(rotation_angle, expand = 1, fillcolor = (0,)*4)
+        # paste the item image
+        img_emoji.paste(img_item, position, mask = img_mask)
 
-        img_emoji.paste(img_book, (int(emoji_w * 0.2), int(emoji_h * 0.25)), mask = fff)
-
-
+        # paste the arms
         img_emoji.paste(self.__img_arm, (0, 0), mask = self.__img_arm.split()[3])
         return img_emoji
 
