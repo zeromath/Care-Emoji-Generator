@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../source/")
 
 try:
     from emojiGenerator import EmojiGenerator
-    from bookCover import BookHandler
+    from bookHandler import BookHandler
 except:
     print(os.path.dirname(__file__))
 

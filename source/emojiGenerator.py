@@ -1,7 +1,6 @@
 import PIL
 from PIL import Image
 import os
-from bookCover import BookHandler
 
 class EmojiGenerator:
     """ 
@@ -69,8 +68,8 @@ class EmojiGenerator:
         # compute the resize parameters
         if keep_ratio:
             book_w, book_h = img_item.size
-            new_w = 1000 * book_w // book_h
-            new_h = 1000
+            new_w = img_height  * book_w // book_h
+            new_h = img_height 
         else:
             new_w, new_h = img_width, img_height
 
@@ -94,13 +93,4 @@ class EmojiGenerator:
         return img_emoji
 
 if __name__ == '__main__':
-    #isbn = '9781475738490'
-    #emoji = generateBookCareEmoji(getImageByISBN(isbn))
-    #emoji.save('output.png')
-    
-    #isbn2 = '9780024041517'
-    #generateBookCareEmoji(getImageByISBN(isbn2)).save('output2.png')
-    
-    isbn3 = '9781111569624'
-    book_cover = BookHandler().getImageByISBN(isbn3)
-    EmojiGenerator().generateCareEmoji(book_cover).save('output3.png')
+    print("To Do")
