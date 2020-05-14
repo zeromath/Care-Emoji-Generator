@@ -1,5 +1,7 @@
+# Exclude Mac Files
+.DS_Store
+
 # Exclude image files
-*.png
 *.psd
 
 # Byte-compiled / optimized / DLL files
