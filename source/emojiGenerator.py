@@ -1,14 +1,16 @@
 import PIL
 from PIL import Image
+import os
 from bookCover import BookHandler
 
 class EmojiGenerator:
     def __init__(self):
-        self.__img_emoji = Image.open("./images/emoji.png")
+        self.__path = os.path.dirname(os.path.abspath(__file__))
+        self.__img_emoji = Image.open(self.__path + "/images/emoji.png")
         self.__img_emoji = self.__img_emoji.convert("RGBA")
         self.__emoji_w, self.__emoji_h = self.__img_emoji.size
 
-        self.__img_arm = Image.open("./images/arm.png")
+        self.__img_arm = Image.open(self.__path + "/images/arm.png")
         self.__img_arm = self.__img_arm.convert("RGBA")
     
     def rotatingMask(self, img, rotation_angle = -20):
