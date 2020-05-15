@@ -48,7 +48,7 @@ There is a file named `cli.py` in the `example/` folder. Open terminal and locat
 ```bash
 python3 cli.py -h
 ```
-It will print out usage and a examples
+It will print out usage and examples.
 
 ### Use `Jupyter Notebook`
 
