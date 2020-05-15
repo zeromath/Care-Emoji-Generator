@@ -38,4 +38,4 @@ if __name__ == '__main__':
     # test
     bh = BookHandler()
     book_cover = bh.getImageByISBN('9781475738490')
-    book_cover.show()
+    book_cover.save('test.png')

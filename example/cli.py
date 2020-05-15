@@ -3,7 +3,7 @@ import sys
 import os
 from PIL import Image
 
-sys.path.append(os.getcwd() + "/../source/")
+sys.path.append(os.path.join(os.getcwd(), "..", "source"))
 
 
 try:
@@ -29,7 +29,7 @@ parser.add_argument('--image', dest = 'image', help = 'an image to insert into e
 
 args = parser.parse_args()
 
-file_path = os.getcwd() + '/'
+file_path = os.getcwd()
 if args.output.find('.') == -1:
     file_name = args.output + '.png'
 else:
@@ -43,7 +43,7 @@ elif args.isbn and args.image:
 if args.isbn:
     item_img = BookHandler().getImageByISBN(args.isbn)
 else:
-    item_img = Image.open(file_path + args.image)
+    item_img = Image.open(os.path.join(file_path, args.image))
     
     
-EmojiGenerator().generateCareEmoji(item_img).save(file_path + file_name)
+EmojiGenerator().generateCareEmoji(item_img).save(os.path.join(file_path, file_name))

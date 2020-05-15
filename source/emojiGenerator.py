@@ -14,12 +14,12 @@ class EmojiGenerator:
     def __init__(self):
         # Load emoji file into an Image object
         self.__path = os.path.dirname(os.path.abspath(__file__))
-        self.__img_emoji = Image.open(self.__path + "/images/emoji.png")
+        self.__img_emoji = Image.open(os.path.join(self.__path, "images", "emoji.png"))
         self.__img_emoji = self.__img_emoji.convert("RGBA")
         self.__emoji_w, self.__emoji_h = self.__img_emoji.size
 
         # Load arm file into an Image object
-        self.__img_arm = Image.open(self.__path + "/images/arm.png")
+        self.__img_arm = Image.open(os.path.join(self.__path, "images", "arm.png"))
         self.__img_arm = self.__img_arm.convert("RGBA")
     
     def rotatingMask(self, img, rotation_angle = -20):
@@ -93,4 +93,6 @@ class EmojiGenerator:
         return img_emoji
 
 if __name__ == '__main__':
-    print("To Do")
+    img_test = Image.open('test.png')
+    eg = EmojiGenerator()
+    eg.generateCareEmoji(img_test).show()
