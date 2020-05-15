@@ -75,7 +75,7 @@ class EmojiGenerator:
 
 
         img_item = img_item.resize((new_w, new_h), Image.ANTIALIAS)
-        img_mask = self.rotatingMask(img_item)
+        img_mask = self.rotatingMask(img_item, rotation_angle)
         img_item = img_item.rotate(rotation_angle, expand = 1)
 
         # compute positions

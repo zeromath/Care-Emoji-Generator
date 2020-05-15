@@ -1,16 +1,16 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../source/")
+sys.path.append(os.getcwd() + "/../source/")
 
 try:
     from emojiGenerator import EmojiGenerator
     from bookHandler import BookHandler
 except:
-    raise
+    print("files not found")
 
 
 if __name__ == '__main__':
-    file_path = os.path.dirname(os.path.abspath(__file__)) + '/'
+    file_path = os.getcwd() + '/'
     file_name = 'output'
     file_ext = '.png'
     

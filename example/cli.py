@@ -2,13 +2,15 @@ import argparse
 import sys
 import os
 from PIL import Image
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../source/")
+
+sys.path.append(os.getcwd() + "/../source/")
+
 
 try:
     from emojiGenerator import EmojiGenerator
     from bookHandler import BookHandler
 except:
-    print(os.path.dirname(__file__))
+    print("files not found.")
 
 
 example_text = """example:
@@ -27,7 +29,7 @@ parser.add_argument('--image', dest = 'image', help = 'an image to insert into e
 
 args = parser.parse_args()
 
-file_path = os.path.dirname(os.path.abspath(__file__)) + '/'
+file_path = os.getcwd() + '/'
 if args.output.find('.') == -1:
     file_name = args.output + '.png'
 else:
