@@ -3,7 +3,7 @@ import sys
 import os
 from PIL import Image
 
-sys.path.append(os.path.join(os.getcwd(), "..", "source"))
+sys.path.append(os.path.join(os.getcwd(), "..", "web"))
 
 
 try:
