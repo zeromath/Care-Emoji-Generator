@@ -1,17 +1,26 @@
 import os
+import uuid
+from io import BytesIO
 from PIL import Image
 import PIL
-from flask import render_template, flash, redirect, url_for, request, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, send_from_directory, after_this_request, send_file
 from app import app
 from bookHandler import BookHandler
 from emojiGenerator import EmojiGenerator
 from werkzeug.utils import secure_filename
 
-def allowed_image(filename):
+def splitExtension(s):
+    t = s.rsplit(".", 1)
+    return (t[0], t[1])
+
+def getRandomName(ext):
+    return str(uuid.uuid4())[-12:] + '.' + ext
+
+def allowedImage(filename):
     if not "." in filename:
         return False
 
-    ext = filename.rsplit(".", 1)[1]
+    _, ext = splitExtension(filename)
 
     if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
         return True
@@ -21,6 +30,9 @@ def allowed_image(filename):
 @app.route('/')
 @app.route('/index')
 def index():
+    tmp_path = os.path.join(app.config["IMAGE_UPLOADS"], app.config["IMAGE_FOLDER"])
+    if not os.path.exists(tmp_path):
+        os.makedirs(tmp_path)
     return redirect(url_for('upload_image'))
 
 @app.route('/upload-image', methods=["GET", "POST"])
@@ -29,11 +41,11 @@ def upload_image():
         if request.files:
             image = request.files["image"]
             if image.filename == "":
-                print("No filename")
                 return redirect(request.url)
-            if allowed_image(image.filename):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+            if allowedImage(image.filename):
+                _, ext = splitExtension(image.filename)
+                filename = getRandomName(ext)
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], app.config["IMAGE_FOLDER"], filename))
                 return redirect(url_for('show_image', filename=filename))
             return redirect(request.url)
         else:
@@ -45,15 +57,28 @@ def upload_image():
 def show_image(filename):
     if request.method == "POST":
         return redirect(url_for('emoji', filename=filename))
-    full_name = os.path.join('images', filename)
+    full_name = os.path.join(app.config["IMAGE_FOLDER"], filename)
     return render_template("show_image.html", userfile = full_name)
+
+def serve_pil_image(pil_img):
+    img_io = BytesIO()
+    pil_img.save(img_io, 'PNG')
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/png')
 
 @app.route('/emoji/<filename>')
 def emoji(filename):
     eg = EmojiGenerator()
-    img = Image.open(os.path.join(app.config['IMAGE_UPLOADS'], filename))
-    ext = filename.rsplit(".", 1)[1]
-    temp_filename = 'temp.png'
+    file_path = os.path.join(app.config['IMAGE_UPLOADS'], app.config["IMAGE_FOLDER"], filename)
+    img = Image.open(file_path)
+    try:
+        os.remove(file_path)
+    except Exception as error:
+        app.logger.error("Error deleting file", error)
+        
+    t_filename, _ = splitExtension(filename)
+    temp_filename = 'emoji' + t_filename + '.png'
     temp_img = eg.generateCareEmoji(img)
-    temp_img.save(os.path.join(app.config['IMAGE_UPLOADS'], temp_filename))
-    return redirect(url_for('static', filename = 'images/' + temp_filename))
+    return serve_pil_image(temp_img)
+
+
