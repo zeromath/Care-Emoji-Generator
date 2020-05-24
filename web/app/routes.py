@@ -33,7 +33,24 @@ def index():
     tmp_path = os.path.join(app.config["IMAGE_UPLOADS"], app.config["IMAGE_FOLDER"])
     if not os.path.exists(tmp_path):
         os.makedirs(tmp_path)
-    return redirect(url_for('upload_image'))
+    return render_template('index.html')
+
+def allowedISBN(s):
+    return s.isnumeric() if len(s) == 13 else False
+
+@app.route('/isbn', methods=["GET", "POST"])
+def isbn():
+    if request.method == "POST":
+        if request.form:
+            isbn = request.form['isbn']
+            if allowedISBN(isbn):
+                bh = BookHandler()
+                filename = getRandomName('png')
+                bh.getImageByISBN(isbn).save(os.path.join(app.config["IMAGE_UPLOADS"], app.config["IMAGE_FOLDER"], filename))
+                return redirect(url_for('show_image', filename=filename))
+            else:
+                return redirect(request.url)
+    return render_template('isbn.html')
 
 @app.route('/upload-image', methods=["GET", "POST"])
 def upload_image():

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Use an ISBN</h1>
+<hr/>
+<form action="/isbn" method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label>Input ISBN</label>
+    <div>
+      <input type="text" name="isbn" id="isbn" maxlength="13"/>
+    </div>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+  
+
+{% endblock %}
