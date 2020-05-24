@@ -16,6 +16,9 @@
 
 ![](images/banner.png)
 
+> There is a web app to use!
+
+[Web App](https://care-eomji-generator.ue.r.appspot.com)
 
 > How does one use this script?
 
